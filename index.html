@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Hill Club — 2026 Operating Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --bg-card: #ffffff;
+    --border: #e2ddd5;
+    --text: #2c2825;
+    --text-light: #7a756e;
+    --clubhouse: #1b3a5c;
+    --clubhouse-bg: #e8eef5;
+    --lodge: #7a5c2e;
+    --lodge-bg: #f3ebe0;
+    --summerhouse: #4a7a52;
+    --summerhouse-bg: #e5f0e7;
+    --note-color: #b85c38;
+    --note-bg: #fdf0e8;
+    --closed-color: #c44b4b;
+    --closed-bg: #fce8e8;
+    --today-border: #d4a843;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  header .subtitle {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  .legend-dot.clubhouse { background: var(--clubhouse); }
+  .legend-dot.lodge { background: var(--lodge); }
+  .legend-dot.summerhouse { background: var(--summerhouse); }
+  .legend-dot.note { background: var(--note-color); }
+
+  .toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    background: var(--bg);
+  }
+
+  .toolbar button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .toolbar button:hover { background: #f5f2ed; }
+
+  .nav-arrow {
+    font-size: 1.4rem;
+    padding: 0.3rem 0.7rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text);
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+
+  .nav-arrow:hover { background: #ece8e1; }
+
+  .month-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    min-width: 220px;
+    text-align: center;
+  }
+
+  .calendar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+  }
+
+  .day-headers {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin-bottom: 1px;
+  }
+
+  .day-header {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.5rem;
+    color: var(--text-light);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+  }
+
+  .day-cell {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    min-height: 120px;
+    position: relative;
+    transition: box-shadow 0.15s;
+  }
+
+  .day-cell:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .day-cell.other-month { background: #f7f5f1; opacity: 0.5; }
+  .day-cell.today { border: 2px solid var(--today-border); }
+
+  .day-num {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 6px;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .day-cell.other-month .day-num { color: var(--text-light); }
+
+  .edit-hint {
+    font-size: 0.6rem;
+    color: transparent;
+    transition: color 0.15s;
+    font-weight: 400;
+  }
+
+  .day-cell:hover .edit-hint { color: var(--text-light); }
+
+  .day-content {
+    padding: 2px 5px 5px;
+    font-size: 0.65rem;
+    line-height: 1.35;
+    outline: none;
+    min-height: 20px;
+  }
+
+  .day-content:focus {
+    background: #fffef8;
+    box-shadow: inset 0 0 0 1px var(--today-border);
+    border-radius: 2px;
+  }
+
+  .venue-block {
+    margin-bottom: 3px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border-left: 3px solid;
+  }
+
+  .venue-block.clubhouse { border-color: var(--clubhouse); background: var(--clubhouse-bg); }
+  .venue-block.lodge { border-color: var(--lodge); background: var(--lodge-bg); }
+  .venue-block.summerhouse { border-color: var(--summerhouse); background: var(--summerhouse-bg); }
+
+  .venue-name {
+    font-weight: 600;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .venue-block.clubhouse .venue-name { color: var(--clubhouse); }
+  .venue-block.lodge .venue-name { color: var(--lodge); }
+  .venue-block.summerhouse .venue-name { color: var(--summerhouse); }
+
+  .venue-hours {
+    color: #555;
+    display: block;
+  }
+
+  .note-block {
+    margin-bottom: 3px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: var(--note-bg);
+    border-left: 3px solid var(--note-color);
+    color: var(--note-color);
+    font-weight: 500;
+  }
+
+  .closed-block {
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: var(--closed-bg);
+    color: var(--closed-color);
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .venue-closed {
+    color: var(--closed-color);
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  /* Print styles */
+  @media print {
+    body { background: #fff; font-size: 9pt; }
+    header { padding: 0.5rem; border: none; }
+    header h1 { font-size: 14pt; }
+    .toolbar { display: none; }
+    .legend { padding: 0.3rem; border: none; }
+    .day-cell { min-height: 80px; break-inside: avoid; }
+    .day-cell:hover { box-shadow: none; }
+    .edit-hint { display: none; }
+    .calendar-container { padding: 0; max-width: 100%; }
+    .nav-arrow { display: none; }
+    .day-content { font-size: 7pt; }
+    @page { size: landscape; margin: 0.5cm; }
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .day-cell { min-height: 90px; }
+    .day-content { font-size: 0.55rem; }
+    .venue-name { font-size: 0.5rem; }
+    .month-title { font-size: 1.2rem; min-width: 160px; }
+    header h1 { font-size: 1.3rem; }
+    .legend { gap: 0.8rem; }
+  }
+
+  @media (max-width: 480px) {
+    .day-cell { min-height: 70px; }
+    .day-content { font-size: 0.5rem; padding: 1px 3px 3px; }
+    .venue-block { padding: 1px 2px; margin-bottom: 2px; border-left-width: 2px; }
+    .day-num { font-size: 0.7rem; padding: 2px 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Indian Hill Club &mdash; 2026 Operating Calendar</h1>
+  <div class="subtitle">Click any day to edit &middot; All hours subject to change</div>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot clubhouse"></div> Clubhouse</div>
+  <div class="legend-item"><div class="legend-dot lodge"></div> The Lodge</div>
+  <div class="legend-item"><div class="legend-dot summerhouse"></div> Summer House</div>
+  <div class="legend-item"><div class="legend-dot note"></div> Special Notes</div>
+</div>
+
+<div class="toolbar">
+  <button class="nav-arrow" onclick="changeMonth(-1)" title="Previous month">&lsaquo;</button>
+  <div class="month-title" id="monthTitle"></div>
+  <button class="nav-arrow" onclick="changeMonth(1)" title="Next month">&rsaquo;</button>
+  <button onclick="printMonth()">Print Month</button>
+  <button onclick="exportMonth()">Export Text</button>
+</div>
+
+<div class="calendar-container">
+  <div class="day-headers">
+    <div class="day-header">Sun</div>
+    <div class="day-header">Mon</div>
+    <div class="day-header">Tue</div>
+    <div class="day-header">Wed</div>
+    <div class="day-header">Thu</div>
+    <div class="day-header">Fri</div>
+    <div class="day-header">Sat</div>
+  </div>
+  <div class="calendar-grid" id="calendarGrid"></div>
+</div>
+
+<script>
+// ─── State ──────────────────────────────────────────
+let currentMonth = 3; // 0-indexed, 3 = April
+const currentYear = 2026;
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+// ─── Date Helper ────────────────────────────────────
+// Returns m*100+d for easy range comparisons (m is 1-indexed)
+function dn(m, d) { return m * 100 + d; }
+
+// ─── CLUBHOUSE ──────────────────────────────────────
+function getClubhouse(m, d, dow) {
+  const dt = dn(m, d);
+
+  // ── Full closures ──
+  if (dt < dn(4, 3)) return null; // Before season
+  if (m === 4 && d === 5) return null; // Easter
+  if (m === 5 && d === 10) return null; // Mother's Day
+  if (m === 5 && d === 26) return null; // Day after Memorial Day
+  if (m === 9 && d === 8) return null; // Day after Labor Day
+  if (m === 11 && d === 26) return null; // Thanksgiving
+  if (m === 12 && d === 24) return null; // Christmas Eve
+  if (m === 12 && d === 25) return null; // Christmas
+  if (m === 12 && d === 31) return null; // NYE
+
+  // ── Dec 26: Special late open ──
+  if (m === 12 && d === 26) return 'Open at 3PM';
+
+  // ── May 31: Closed for lunch (Wirtz Brunch), dinner only ──
+  if (m === 5 && d === 31) return 'D 6–9 (no lunch — Wirtz Brunch)';
+
+  // ── Memorial Day: Open (Mon override) ──
+  if (m === 5 && d === 25) return 'L 12–2:30 · D 6–9 · Bar 2:30–5';
+
+  // ── Labor Day: Open (Mon override) ──
+  if (m === 9 && d === 7) return 'L 12–2:30 · D 5:30–8:30 · Bar 2:30–5';
+
+  // ── Aug 23: IJ Awards Banquet — Dinner Buffet Only ──
+  if (m === 8 && d === 23) return 'L 12–2:30 · Dinner Buffet Only · Bar 2:30–5';
+
+  // ── Period 1: Apr 3–26 ──
+  if (dt >= dn(4, 3) && dt <= dn(4, 26)) {
+    if (dow === 1 || dow === 2) return null; // Mon/Tue
+    if (dow === 3) return 'L 12–2'; // Wed: lunch only
+    return 'L 12–2 · D 6–9'; // Thu–Sun
+  }
+
+  // ── Period 2: Apr 27 – May 17 ──
+  if (dt >= dn(4, 27) && dt <= dn(5, 17)) {
+    if (dow === 1 || dow === 2) return null;
+    return 'L 12–2 · D 6–9';
+  }
+
+  // ── Period 3: May 18 (Mon) transition ──
+  if (m === 5 && d === 18) return null; // Mon closed
+
+  // ── Period 4: May 19 – Sep 7 (Summer) ──
+  if (dt >= dn(5, 19) && dt <= dn(9, 7)) {
+    if (dow === 1) return null; // Mon
+    if (dow === 2) return 'L 12–2:30 · Bar 2:30–5'; // Tue: lunch only
+    if (dow === 0) return 'L 12–2:30 · D 5:30–8:30 · Bar 2:30–5'; // Sun
+    return 'L 12–2:30 · D 6–9 · Bar 2:30–5'; // Wed–Sat
+  }
+
+  // ── Period 5: Sep 8 – Sep 27 (Post Labor Day) ──
+  if (dt >= dn(9, 8) && dt <= dn(9, 27)) {
+    if (dow === 1) return null; // Mon
+    if (dow === 2) return 'L 12–2 (MLR bev only eve)'; // Tue
+    if (dow === 0) return 'L 12–2 · D 5:30–8:30'; // Sun
+    return 'L 12–2 · D 6–9'; // Wed–Sat
+  }
+
+  // ── Period 6: Sep 28 – Oct 4 ──
+  if (dt >= dn(9, 28) && dt <= dn(10, 4)) {
+    if (dow === 1 || dow === 2) return null;
+    return 'L 12–2 · D 6–9';
+  }
+
+  // ── Period 7: Oct 5 – Nov 29 ──
+  if (dt >= dn(10, 5) && dt <= dn(11, 29)) {
+    if (dow === 1 || dow === 2) return null;
+    if (dow === 3) return 'L 12–2'; // Wed: lunch only
+    return 'L 12–2 · D 6–9'; // Thu–Sun
+  }
+
+  // ── Period 8: Nov 30 – Dec 27 ──
+  if (dt >= dn(11, 30) && dt <= dn(12, 27)) {
+    if (dow === 1 || dow === 2) return null;
+    return 'L 12–2 · D 6–9';
+  }
+
+  // ── Period 9: Dec 28–31 (Oct–Nov pattern) ──
+  if (dt >= dn(12, 28)) {
+    if (dow === 1 || dow === 2) return null;
+    if (dow === 3) return 'L 12–2'; // Wed lunch only
+    return 'L 12–2 · D 6–9';
+  }
+
+  return null;
+}
+
+// ─── THE LODGE ──────────────────────────────────────
+function getLodge(m, d, dow) {
+  const dt = dn(m, d);
+
+  // ── Full closures ──
+  if (m === 4 && d === 5) return null; // Easter
+  if (m === 10 && d === 31) return null; // Halloween
+  if (m === 11 && d === 26) return null; // Thanksgiving
+  if (m === 12 && d === 24) return null; // Christmas Eve
+  if (m === 12 && d === 25) return null; // Christmas
+  if (m === 12 && d === 31) return null; // NYE
+
+  // ── Dec 26: Special late open ──
+  if (m === 12 && d === 26) return 'Open at 3PM';
+
+  // ── May 10: CLOSED (Mother's Day + season end) ──
+  if (m === 5 && d === 10) return null;
+
+  // ── Period: Mar 30 – Apr 5 ──
+  if (dt >= dn(3, 30) && dt <= dn(4, 5)) {
+    if (dow === 1 || dow === 2) return null; // Mon/Tue
+    if (dow === 0) return null; // Sun: closed dinner, no lunch = effectively closed
+    return 'Bev 4PM · Dinner 5–9'; // Wed–Sat
+  }
+
+  // ── Period: Apr 6 – Apr 30 ──
+  if (dt >= dn(4, 6) && dt <= dn(4, 30)) {
+    if (dow === 1 || dow === 2) return null; // Mon/Tue
+    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9'; // Wed
+    if (dow === 4) return null; // Thu
+    return 'Bev 4PM · Dinner 5–9'; // Fri–Sun
+  }
+
+  // ── Period: May 1 – May 9 (Limited) ──
+  if (m === 5 && d >= 1 && d <= 9) {
+    if (d === 1 || d === 2 || d === 3 || d === 8) return 'Dinner 5–9';
+    if (d === 9) return 'Dinner 5–9 — LAST DAY';
+    return null; // May 4–7 closed
+  }
+
+  // ── CLOSED: May 10 – Sep 17 ──
+  if (dt >= dn(5, 10) && dt <= dn(9, 17)) return null;
+
+  // ── Period: Sep 18 – Sep 27 (Limited reopen) ──
+  if (dt >= dn(9, 18) && dt <= dn(9, 27)) {
+    if (d === 18) return 'Dinner 5–9 — SEASON OPENS';
+    if (d === 19 || d === 20 || d === 25 || d === 26 || d === 27) return 'Dinner 5–9';
+    return null; // Mon–Thu closed
+  }
+
+  // ── Sep 28–29: CLOSED ──
+  if (m === 9 && (d === 28 || d === 29)) return null;
+
+  // ── Period: Sep 30 – Oct 4 (Transition) ──
+  if (dt >= dn(9, 30) && dt <= dn(10, 4)) {
+    if (m === 9 && d === 30) return null; // Wed closed
+    if (m === 10 && d === 1) return null; // Thu closed
+    if (m === 10 && d === 2) return 'Dinner 5–9';
+    if (m === 10 && d === 3) return 'Bev 11AM · L 11:30–3:30 · D 5–9';
+    if (m === 10 && d === 4) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9';
+    return null;
+  }
+
+  // ── Period: Oct 5 – Nov 29 (Regular) ──
+  if (dt >= dn(10, 5) && dt <= dn(11, 29)) {
+    if (dow === 1 || dow === 2) return null; // Mon/Tue
+    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9'; // Wed
+    if (dow === 4) return null; // Thu
+    if (dow === 5) return 'Bev 4PM · Dinner 5–9'; // Fri
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9'; // Sat
+    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9'; // Sun
+    return null;
+  }
+
+  // ── Period: Nov 30 – Dec 27 ──
+  if (dt >= dn(11, 30) && dt <= dn(12, 27)) {
+    if (dow === 1 || dow === 2) return null; // Mon/Tue
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9'; // Sat
+    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9'; // Sun
+    return 'Bev 4PM · Dinner 5–9'; // Wed–Fri
+  }
+
+  // ── Period: Dec 28–31 (Oct–Nov pattern) ──
+  if (dt >= dn(12, 28)) {
+    if (dow === 1 || dow === 2) return null;
+    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9';
+    if (dow === 4) return null;
+    if (dow === 5) return 'Bev 4PM · Dinner 5–9';
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9';
+    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9';
+    return null;
+  }
+
+  return null;
+}
+
+// ─── SUMMER HOUSE ───────────────────────────────────
+function getSummerHouse(m, d, dow) {
+  const dt = dn(m, d);
+
+  // Before May 23 or after Sep 13: CLOSED
+  if (dt < dn(5, 23) || dt > dn(9, 13)) return null;
+
+  // ── Memorial Day Weekend: May 23–25 ──
+  if (m === 5 && d >= 23 && d <= 25) return '11AM–8PM';
+
+  // ── May 26 ──
+  if (m === 5 && d === 26) return null; // Closed
+
+  // ── May 27–29 ──
+  if (m === 5 && d >= 27 && d <= 29) return '5PM–8PM';
+
+  // ── May 30–31 ──
+  if (m === 5 && d >= 30 && d <= 31) return '11AM–8PM';
+
+  // ── Jun 1 ──
+  if (m === 6 && d === 1) return null; // Mon closed
+
+  // ── Jun 2–4 ──
+  if (m === 6 && d >= 2 && d <= 4) return '12PM–8PM';
+
+  // ── Jun 5 – Aug 16 (Regular Summer) ──
+  if (dt >= dn(6, 5) && dt <= dn(8, 16)) {
+    if (dow === 1) return null; // Mon
+    if (dow === 0 || dow === 6) return '11AM–9PM'; // Sat/Sun
+    return '11:30AM–9PM'; // Tue–Fri
+  }
+
+  // ── Aug 17 – Aug 30 ──
+  if (dt >= dn(8, 17) && dt <= dn(8, 30)) {
+    if (dow === 1) return null; // Mon
+    if (dow === 0 || dow === 6) return '11AM–8PM'; // Sat/Sun
+    return '4PM–8PM'; // Tue–Fri
+  }
+
+  // ── Aug 31 – Sep 4: CLOSED ──
+  if (dt >= dn(8, 31) && dt <= dn(9, 4)) return null;
+
+  // ── Sep 5–7 ──
+  if (m === 9 && d >= 5 && d <= 7) return '11AM–8PM';
+
+  // ── Sep 8–10: CLOSED ──
+  if (m === 9 && d >= 8 && d <= 10) return null;
+
+  // ── Sep 11–13 ──
+  if (m === 9 && d >= 11 && d <= 13) {
+    if (d === 13) return '11AM–8PM — LAST DAY';
+    return '11AM–8PM';
+  }
+
+  return null;
+}
+
+// ─── SPECIAL NOTES ──────────────────────────────────
+function getNotes(m, d) {
+  const dt = dn(m, d);
+  const notes = [];
+
+  // April
+  if (m === 4 && d === 3) notes.push('Clubhouse Opens for Season');
+  if (m === 4 && (d === 3 || d === 4)) notes.push('North Porch closed (Easter setup)');
+  if (m === 4 && d === 5) notes.push('Easter — Club CLOSED (MLR bev only)');
+
+  // May
+  if (m === 5 && d === 10) notes.push("Mother's Day — Club CLOSED (MLR bev only)");
+  if (m === 5 && d === 13) notes.push('Anticipated Terrace Opening');
+  if (m === 5 && d === 19) notes.push('Club now open Tuesdays');
+  if (m === 5 && d === 25) notes.push('Memorial Day — Club Open');
+  if (m === 5 && d === 26) notes.push('Club CLOSED (day after Memorial Day)');
+  if (m === 5 && (d === 28 || d === 29)) notes.push('North Porch closed (Wirtz Wedding setup)');
+  if (m === 5 && (d === 30 || d === 31)) notes.push('North Porch closed (Wirtz Wedding)');
+  if (m === 5 && d === 31) notes.push('Clubhouse closed lunch (Wirtz Brunch)');
+
+  // August
+  if (m === 8 && (d === 7 || d === 9)) notes.push('North Porch closed (Sawyer Wedding)');
+  if (m === 8 && d === 23) notes.push('IJ Awards Banquet — Summer House');
+  if (m === 8 && (d === 28 || d === 30)) notes.push('North Porch closed (McNitt Wedding)');
+
+  // September
+  if (m === 9 && d === 7) notes.push('Labor Day — Club Open');
+  if (m === 9 && d === 8) notes.push('Club CLOSED (day after Labor Day)');
+  if (m === 9 && d >= 10 && d <= 14) notes.push('North Porch closed (Connell Wedding)');
+  if (m === 9 && (d === 18 || d === 20)) notes.push('North Porch closed (Osborn Wedding)');
+  if (m === 9 && d === 18) notes.push('Lodge Season 19 Opens');
+  if (m === 9 && d === 13) notes.push('Last Day — Summer House');
+
+  // October
+  if (m === 10 && (d === 2 || d === 4)) notes.push('North Porch closed (King Wedding)');
+  if (m === 10 && (d === 9 || d === 11)) notes.push('North Porch closed (Merriman Wedding)');
+  if (m === 10 && d >= 16 && d <= 18) notes.push('North Porch blocked dinner (Family Halloween)');
+  if (m === 10 && d === 31) notes.push('Halloween — Lodge closed L&D');
+
+  // November
+  if (m === 11 && (d === 20 || d === 22)) notes.push('North Porch closed (Kenyon Wedding)');
+  if (m === 11 && d === 25) notes.push('Lodge: no pvt events in Ailsa Room');
+  if (m === 11 && d === 26) notes.push('Thanksgiving — Club CLOSED');
+  if (m === 11 && d === 27) notes.push('Lodge open lunch & dinner');
+  if (m === 11 && d === 28) notes.push('Activity Ctr & Ailsa closed (Gingerbread setup)');
+  if (m === 11 && d === 29) notes.push('Activity Ctr & Ailsa closed (Gingerbread Decorating)');
+  if (m === 11 && d === 30) notes.push('Christmas Décor Install');
+
+  // December
+  if (m === 12 && d === 1) notes.push('Christmas Décor Install');
+  if (m === 12 && d >= 4 && d <= 6) notes.push('North Porch closed');
+  if (m === 12 && (d === 9 || d === 10)) notes.push('North Porch closed');
+  if (m === 12 && (d === 12 || d === 13)) notes.push('North Porch closed');
+  if (m === 12 && d >= 17 && d <= 20) notes.push('North Porch closed');
+  if (m === 12 && d === 24) notes.push('Christmas Eve — Club CLOSED');
+  if (m === 12 && d === 25) notes.push('Christmas Day — Club CLOSED');
+  if (m === 12 && d === 26) notes.push('Clubhouse & Lodge open at 3PM');
+  if (m === 12 && (d === 28 || d === 29)) notes.push('Christmas Décor Breakdown');
+  if (m === 12 && d === 31) notes.push("New Year's Eve — Club CLOSED");
+  if (m === 5 && d === 9) notes.push('Last Day — Lodge (Spring)');
+
+  return notes;
+}
+
+// ─── RENDER ─────────────────────────────────────────
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const title = document.getElementById('monthTitle');
+  grid.innerHTML = '';
+
+  const year = currentYear;
+  const month = currentMonth; // 0-indexed
+
+  title.textContent = MONTH_NAMES[month] + ' ' + year;
+
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
+
+  // Previous month padding
+  for (let i = 0; i < firstDay; i++) {
+    const day = prevDays - firstDay + 1 + i;
+    const pm = month - 1;
+    const cell = createDayCell(year, pm, day, true);
+    grid.appendChild(cell);
+  }
+
+  // Current month
+  const today = new Date();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = (today.getFullYear() === year && today.getMonth() === month && today.getDate() === d);
+    const cell = createDayCell(year, month, d, false, isToday);
+    grid.appendChild(cell);
+  }
+
+  // Next month padding
+  const totalCells = firstDay + daysInMonth;
+  const remaining = (totalCells % 7 === 0) ? 0 : 7 - (totalCells % 7);
+  for (let i = 1; i <= remaining; i++) {
+    const cell = createDayCell(year, month + 1, i, true);
+    grid.appendChild(cell);
+  }
+}
+
+function createDayCell(year, month, day, isOther, isToday) {
+  const cell = document.createElement('div');
+  cell.className = 'day-cell' + (isOther ? ' other-month' : '') + (isToday ? ' today' : '');
+
+  const numDiv = document.createElement('div');
+  numDiv.className = 'day-num';
+  numDiv.innerHTML = '<span>' + day + '</span><span class="edit-hint">&#9998; edit</span>';
+  cell.appendChild(numDiv);
+
+  const content = document.createElement('div');
+  content.className = 'day-content';
+  content.contentEditable = 'true';
+  content.spellcheck = false;
+
+  // Get schedule for this date
+  const date = new Date(year, month, day);
+  const m = date.getMonth() + 1; // 1-indexed
+  const d = date.getDate();
+  const dow = date.getDay();
+
+  const ch = getClubhouse(m, d, dow);
+  const lodge = getLodge(m, d, dow);
+  const sh = getSummerHouse(m, d, dow);
+  const notes = getNotes(m, d);
+
+  let hasAnyVenue = ch || lodge || sh;
+  let html = '';
+
+  // Notes first
+  for (const note of notes) {
+    html += '<div class="note-block">' + escHtml(note) + '</div>';
+  }
+
+  // Venues
+  if (ch) {
+    html += '<div class="venue-block clubhouse"><span class="venue-name">Clubhouse</span> <span class="venue-hours">' + escHtml(ch) + '</span></div>';
+  }
+  if (lodge) {
+    html += '<div class="venue-block lodge"><span class="venue-name">Lodge</span> <span class="venue-hours">' + escHtml(lodge) + '</span></div>';
+  }
+  if (sh) {
+    html += '<div class="venue-block summerhouse"><span class="venue-name">Summer House</span> <span class="venue-hours">' + escHtml(sh) + '</span></div>';
+  }
+
+  // Check if everything is closed (no venues, and it's in the operating range Apr–Dec)
+  if (!hasAnyVenue && notes.length === 0 && m >= 4 && m <= 12) {
+    // Check if it's a day when at least one venue COULD be open
+    // (i.e., not just a day outside all seasons)
+    const couldBeOpen = (m >= 4) && !isAllSeasonsClosed(m, d);
+    if (couldBeOpen && !isOther) {
+      html += '<div class="closed-block">CLOSED</div>';
+    }
+  }
+
+  content.innerHTML = html;
+  cell.appendChild(content);
+  return cell;
+}
+
+function isAllSeasonsClosed(m, d) {
+  // Returns true if NO venue has a season covering this date
+  // (used to avoid showing "CLOSED" on days that are just off-season)
+  // Clubhouse: Apr 3 – Dec 31
+  // Lodge: Apr 1 – May 9, Sep 18 – Dec 31
+  // Summer House: May 23 – Sep 13
+  const dt = dn(m, d);
+  const clubhouseSeason = dt >= dn(4, 3);
+  const lodgeSeason = (dt >= dn(4, 1) && dt <= dn(5, 9)) || dt >= dn(9, 18);
+  const shSeason = dt >= dn(5, 23) && dt <= dn(9, 13);
+  return !clubhouseSeason && !lodgeSeason && !shSeason;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ─── NAVIGATION ─────────────────────────────────────
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth < 3) currentMonth = 3; // Apr
+  if (currentMonth > 11) currentMonth = 11; // Dec
+  renderCalendar();
+}
+
+// ─── PRINT ──────────────────────────────────────────
+function printMonth() {
+  window.print();
+}
+
+// ─── EXPORT ─────────────────────────────────────────
+function exportMonth() {
+  const year = currentYear;
+  const month = currentMonth;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const monthName = MONTH_NAMES[month];
+
+  let text = 'INDIAN HILL CLUB — ' + monthName.toUpperCase() + ' ' + year + '\n';
+  text += '='.repeat(50) + '\n\n';
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const m = date.getMonth() + 1;
+    const dow = date.getDay();
+    const dayName = DAY_NAMES[dow];
+
+    text += dayName + ', ' + monthName + ' ' + d + '\n';
+    text += '-'.repeat(30) + '\n';
+
+    const notes = getNotes(m, d);
+    const ch = getClubhouse(m, d, dow);
+    const lodge = getLodge(m, d, dow);
+    const sh = getSummerHouse(m, d, dow);
+
+    for (const note of notes) text += '  * ' + note + '\n';
+    if (ch) text += '  Clubhouse: ' + ch + '\n';
+    else if (m >= 4) text += '  Clubhouse: CLOSED\n';
+    if (lodge !== null) text += '  Lodge: ' + lodge + '\n';
+    else {
+      const dt = dn(m, d);
+      const lodgeSeason = (dt >= dn(4, 1) && dt <= dn(5, 9)) || dt >= dn(9, 18);
+      if (lodgeSeason) text += '  Lodge: CLOSED\n';
+    }
+    if (sh) text += '  Summer House: ' + sh + '\n';
+    else {
+      const dt = dn(m, d);
+      if (dt >= dn(5, 23) && dt <= dn(9, 13)) text += '  Summer House: CLOSED\n';
+    }
+
+    text += '\n';
+  }
+
+  // Copy to clipboard and download
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  }).catch(() => {});
+
+  // Also download as file
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'IHC-' + monthName + '-2026.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─── KEYBOARD NAV ───────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if (e.target.contentEditable === 'true') return;
+  if (e.key === 'ArrowLeft') changeMonth(-1);
+  if (e.key === 'ArrowRight') changeMonth(1);
+});
+
+// ─── INIT ───────────────────────────────────────────
+renderCalendar();
+</script>
+</body>
+</html>
