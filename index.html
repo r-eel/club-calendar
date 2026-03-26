@@ -364,25 +364,25 @@ function getClubhouse(m, d, dow) {
   if (m === 5 && d === 31) return 'D 6–9 (no lunch — Wirtz Brunch)';
 
   // ── Memorial Day: Open (Mon override) ──
-  if (m === 5 && d === 25) return 'L 12–2:30 · D 6–9 · Bar 2:30–5';
+  if (m === 5 && d === 25) return 'L 12–2:30<br>D 6–9<br>Bar 2:30–5';
 
   // ── Labor Day: Open (Mon override) ──
-  if (m === 9 && d === 7) return 'L 12–2:30 · D 5:30–8:30 · Bar 2:30–5';
+  if (m === 9 && d === 7) return 'L 12–2:30<br>D 5:30–8:30<br>Bar 2:30–5';
 
   // ── Aug 23: JR Awards Banquet — Dinner Buffet Only ──
-  if (m === 8 && d === 23) return 'L 12–2:30 · Dinner Buffet Only · Bar 2:30–5';
+  if (m === 8 && d === 23) return 'L 12–2:30<br>Dinner Buffet Only<br>Bar 2:30–5';
 
   // ── Period 1: Apr 3–26 ──
   if (dt >= dn(4, 3) && dt <= dn(4, 26)) {
     if (dow === 1 || dow === 2) return null; // Mon/Tue
     if (dow === 3) return 'L 12–2'; // Wed: lunch only
-    return 'L 12–2 · D 6–9'; // Thu–Sun
+    return 'L 12–2<br>D 6–9'; // Thu–Sun
   }
 
   // ── Period 2: Apr 27 – May 17 ──
   if (dt >= dn(4, 27) && dt <= dn(5, 17)) {
     if (dow === 1 || dow === 2) return null;
-    return 'L 12–2 · D 6–9';
+    return 'L 12–2<br>D 6–9';
   }
 
   // ── Period 3: May 18 (Mon) transition ──
@@ -391,52 +391,52 @@ function getClubhouse(m, d, dow) {
   // ── Period 4: May 19 – Sep 7 (Summer) ──
   if (dt >= dn(5, 19) && dt <= dn(9, 7)) {
     if (dow === 1) return null; // Mon
-    if (dow === 2) return 'L 12–2:30 · Bar 2:30–5'; // Tue: lunch only
-    if (dow === 0) return 'L 12–2:30 · D 5:30–8:30 · Bar 2:30–5'; // Sun
-    return 'L 12–2:30 · D 6–9 · Bar 2:30–5'; // Wed–Sat
+    if (dow === 2) return 'L 12–2:30<br>Bar 2:30–5'; // Tue: lunch only
+    if (dow === 0) return 'L 12–2:30<br>D 5:30–8:30<br>Bar 2:30–5'; // Sun
+    return 'L 12–2:30<br>D 6–9<br>Bar 2:30–5'; // Wed–Sat
   }
 
   // ── Men's Invitational: Sep 11-12 Clubhouse closed L&D ──
   if (m === 9 && (d === 11 || d === 12)) return null;
 
   // ── Pater Filius Jul 23: Terrace closed lunch, CH closed dinner ──
-  if (m === 7 && d === 23) return 'L 12–2:30 (no Terrace) · Bar 2:30–5';
+  if (m === 7 && d === 23) return 'L 12–2:30 (no Terrace)<br>Bar 2:30–5';
 
   // ── Annual Meeting May 21: CH & Lodge closed dinner ──
-  if (m === 5 && d === 21) return 'L 12–2:30 · Bar 2:30–5';
+  if (m === 5 && d === 21) return 'L 12–2:30<br>Bar 2:30–5';
 
   // ── Period 5: Sep 8 – Sep 27 (Post Labor Day) ──
   if (dt >= dn(9, 8) && dt <= dn(9, 27)) {
     if (dow === 1) return null; // Mon
     if (dow === 2) return 'L 12–2 (MLR bev only eve)'; // Tue
-    if (dow === 0) return 'L 12–2 · D 5:30–8:30'; // Sun
-    return 'L 12–2 · D 6–9'; // Wed–Sat
+    if (dow === 0) return 'L 12–2<br>D 5:30–8:30'; // Sun
+    return 'L 12–2<br>D 6–9'; // Wed–Sat
   }
 
   // ── Period 6: Sep 28 – Oct 4 ──
   if (dt >= dn(9, 28) && dt <= dn(10, 4)) {
     if (dow === 1 || dow === 2) return null;
-    return 'L 12–2 · D 6–9';
+    return 'L 12–2<br>D 6–9';
   }
 
   // ── Period 7: Oct 5 – Nov 29 ──
   if (dt >= dn(10, 5) && dt <= dn(11, 29)) {
     if (dow === 1 || dow === 2) return null;
     if (dow === 3) return 'L 12–2'; // Wed: lunch only
-    return 'L 12–2 · D 6–9'; // Thu–Sun
+    return 'L 12–2<br>D 6–9'; // Thu–Sun
   }
 
   // ── Period 8: Nov 30 – Dec 27 ──
   if (dt >= dn(11, 30) && dt <= dn(12, 27)) {
     if (dow === 1 || dow === 2) return null;
-    return 'L 12–2 · D 6–9';
+    return 'L 12–2<br>D 6–9';
   }
 
   // ── Period 9: Dec 28–31 (Oct–Nov pattern) ──
   if (dt >= dn(12, 28)) {
     if (dow === 1 || dow === 2) return null;
     if (dow === 3) return 'L 12–2'; // Wed lunch only
-    return 'L 12–2 · D 6–9';
+    return 'L 12–2<br>D 6–9';
   }
 
   return null;
@@ -464,15 +464,15 @@ function getLodge(m, d, dow) {
   if (dt >= dn(3, 30) && dt <= dn(4, 5)) {
     if (dow === 1 || dow === 2) return null; // Mon/Tue
     if (dow === 0) return null; // Sun: closed dinner, no lunch = effectively closed
-    return 'Bev 4PM · Dinner 5–9'; // Wed–Sat
+    return 'Bev 4PM<br>Dinner 5–9'; // Wed–Sat
   }
 
   // ── Period: Apr 6 – Apr 30 ──
   if (dt >= dn(4, 6) && dt <= dn(4, 30)) {
     if (dow === 1 || dow === 2) return null; // Mon/Tue
-    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9'; // Wed
+    if (dow === 3) return 'Themed Night · Bev 4PM<br>D 5–9'; // Wed
     if (dow === 4) return null; // Thu
-    return 'Bev 4PM · Dinner 5–9'; // Fri–Sun
+    return 'Bev 4PM<br>Dinner 5–9'; // Fri–Sun
   }
 
   // ── Period: May 1 – May 9 (Limited) ──
@@ -500,38 +500,38 @@ function getLodge(m, d, dow) {
     if (m === 9 && d === 30) return null; // Wed closed
     if (m === 10 && d === 1) return null; // Thu closed
     if (m === 10 && d === 2) return 'Dinner 5–9';
-    if (m === 10 && d === 3) return 'Bev 11AM · L 11:30–3:30 · D 5–9';
-    if (m === 10 && d === 4) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9';
+    if (m === 10 && d === 3) return 'Bev 11AM · L 11:30–3:30<br>D 5–9';
+    if (m === 10 && d === 4) return 'Bev 10:30AM<br>Brunch 10:30–3:30<br>D 5–9';
     return null;
   }
 
   // ── Period: Oct 5 – Nov 29 (Regular) ──
   if (dt >= dn(10, 5) && dt <= dn(11, 29)) {
     if (dow === 1 || dow === 2) return null; // Mon/Tue
-    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9'; // Wed
+    if (dow === 3) return 'Themed Night · Bev 4PM<br>D 5–9'; // Wed
     if (dow === 4) return null; // Thu
-    if (dow === 5) return 'Bev 4PM · Dinner 5–9'; // Fri
-    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9'; // Sat
-    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9'; // Sun
+    if (dow === 5) return 'Bev 4PM<br>Dinner 5–9'; // Fri
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30<br>D 5–9'; // Sat
+    if (dow === 0) return 'Bev 10:30AM<br>Brunch 10:30–3:30<br>D 5–9'; // Sun
     return null;
   }
 
   // ── Period: Nov 30 – Dec 27 ──
   if (dt >= dn(11, 30) && dt <= dn(12, 27)) {
     if (dow === 1 || dow === 2) return null; // Mon/Tue
-    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9'; // Sat
-    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9'; // Sun
-    return 'Bev 4PM · Dinner 5–9'; // Wed–Fri
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30<br>D 5–9'; // Sat
+    if (dow === 0) return 'Bev 10:30AM<br>Brunch 10:30–3:30<br>D 5–9'; // Sun
+    return 'Bev 4PM<br>Dinner 5–9'; // Wed–Fri
   }
 
   // ── Period: Dec 28–31 (Oct–Nov pattern) ──
   if (dt >= dn(12, 28)) {
     if (dow === 1 || dow === 2) return null;
-    if (dow === 3) return 'Themed Night · Bev 4PM · D 5–9';
+    if (dow === 3) return 'Themed Night · Bev 4PM<br>D 5–9';
     if (dow === 4) return null;
-    if (dow === 5) return 'Bev 4PM · Dinner 5–9';
-    if (dow === 6) return 'Bev 11AM · L 11:30–3:30 · D 5–9';
-    if (dow === 0) return 'Bev 10:30AM · Brunch 10:30–3:30 · D 5–9';
+    if (dow === 5) return 'Bev 4PM<br>Dinner 5–9';
+    if (dow === 6) return 'Bev 11AM · L 11:30–3:30<br>D 5–9';
+    if (dow === 0) return 'Bev 10:30AM<br>Brunch 10:30–3:30<br>D 5–9';
     return null;
   }
 
