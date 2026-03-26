@@ -396,6 +396,15 @@ function getClubhouse(m, d, dow) {
     return 'L 12–2:30 · D 6–9 · Bar 2:30–5'; // Wed–Sat
   }
 
+  // ── Men's Invitational: Sep 11-12 Clubhouse closed L&D ──
+  if (m === 9 && (d === 11 || d === 12)) return null;
+
+  // ── Pater Filius Jul 23: Terrace closed lunch, CH closed dinner ──
+  if (m === 7 && d === 23) return 'L 12–2:30 (no Terrace) · Bar 2:30–5';
+
+  // ── Annual Meeting May 21: CH & Lodge closed dinner ──
+  if (m === 5 && d === 21) return 'L 12–2:30 · Bar 2:30–5';
+
   // ── Period 5: Sep 8 – Sep 27 (Post Labor Day) ──
   if (dt >= dn(9, 8) && dt <= dn(9, 27)) {
     if (dow === 1) return null; // Mon
@@ -473,7 +482,7 @@ function getLodge(m, d, dow) {
     return null; // May 4–7 closed
   }
 
-  // ── CLOSED: May 10 – Sep 17 ──
+  // ── CLOSED: May 10 – Sep 17 (Lodge off-season) ──
   if (dt >= dn(5, 10) && dt <= dn(9, 17)) return null;
 
   // ── Period: Sep 18 – Sep 27 (Limited reopen) ──
@@ -608,7 +617,7 @@ function getNotes(m, d) {
   if (m === 5 && d === 31) notes.push('Clubhouse closed lunch (Wirtz Brunch)');
 
   // August
-  if (m === 8 && (d === 7 || d === 9)) notes.push('North Porch closed (Sawyer Wedding)');
+  if (m === 8 && (d === 7 || d === 8)) notes.push('North Porch closed (Sawyer Wedding)');
   if (m === 8 && d === 23) notes.push('JR Awards Banquet — Summer House');
   if (m === 8 && (d === 28 || d === 30)) notes.push('North Porch closed (McNitt Wedding)');
 
@@ -616,7 +625,7 @@ function getNotes(m, d) {
   if (m === 9 && d === 7) notes.push('Labor Day — Club Open');
   if (m === 9 && d === 8) notes.push('Club CLOSED (day after Labor Day)');
   if (m === 9 && d >= 10 && d <= 14) notes.push('North Porch closed (Invitational Setup)');
-  if (m === 9 && (d === 18 || d === 20)) notes.push('North Porch closed (Olson Wedding)');
+  if (m === 9 && (d === 18 || d === 19)) notes.push('North Porch closed (Olson Wedding)');
   if (m === 9 && d === 18) notes.push('Lodge Season 19 Opens');
   if (m === 9 && d === 13) notes.push('Last Day — Summer House');
 
@@ -647,6 +656,43 @@ function getNotes(m, d) {
   if (m === 12 && (d === 28 || d === 29)) notes.push('Christmas Décor Breakdown');
   if (m === 12 && d === 31) notes.push("New Year's Eve — Club CLOSED");
   if (m === 5 && d === 9) notes.push('Last Day — Lodge (Spring)');
+
+  // === NEW: Large Events, Swim Meets, Golf Events, Weddings ===
+
+  // Annual Meeting
+  if (m === 5 && d === 21) notes.push('Annual Meeting — CH & Lodge closed for dinner');
+
+  // Chopper Swim Meets (Summer House closed dinner, buffet only)
+  if (m === 6 && d === 9) notes.push('Swim Meet vs Westmoreland — SH dinner closed, buffet only');
+  if (m === 6 && d === 11) notes.push('Swim Meet vs Skokie CC — SH dinner closed, buffet only');
+  if (m === 6 && d === 18) notes.push('Swim Meet vs Sunset Ridge — SH dinner closed, buffet only');
+  if (m === 6 && d === 30) notes.push('Big 6/Little 6 Diving — SH dinner closed, buffet only');
+
+  // Men's Golf Events
+  if (m === 9 && d === 11) notes.push("Men's Invitational Day 1 — CH closed L&D");
+  if (m === 9 && d === 12) notes.push("Men's Invitational Day 2 — CH closed L&D");
+  if (m === 7 && d === 16) notes.push("Men's Summer Guest Day");
+  if (m === 7 && d === 23) notes.push('Pater Filius — Terrace closed L, CH closed D');
+  if (m === 8 && d === 20) notes.push('Member-Member Cocktail — Busy evening, limited menu');
+  if (m === 8 && d === 21) notes.push("Men's Member-Member Day 1");
+  if (m === 8 && d === 22) notes.push("Men's Member-Member Day 2");
+  if (m === 9 && d === 18) notes.push('Glow Golf — North Porch closed dinner');
+
+  // Weddings & Large Events
+  // Wirtz (May 30) — already have North Porch notes for May 28-31
+  if (m === 5 && d === 30) notes.push('Wirtz Wedding — CH closed lunch');
+
+  // Champagne (Jun 3)
+  if (m === 6 && d === 3) notes.push('Champagne Event — N. Porch closed lunch (subject to format)');
+
+  // Sawyer (Aug 8) — already have Aug 7 & 9, update to 7 & 8
+  // Note: existing notes say Aug 7 & 9, but this doc says Aug 7 & 8
+
+  // Todd Olson (Sep 19) — existing notes say Sep 18 & 20, this doc says Sep 18 & 19
+  // Note: Olson N. Porch blocked Sep 18 & 19
+
+  // Lyman HS Reunion (Sep 26)
+  if (m === 9 && d === 26) notes.push('Lyman HS Reunion — N. Porch blocked');
 
   return notes;
 }
