@@ -810,7 +810,7 @@ function isAllSeasonsClosed(m, d) {
 }
 
 function escHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&lt;br&gt;/g, '<br>');
 }
 
 // ─── NAVIGATION ─────────────────────────────────────
